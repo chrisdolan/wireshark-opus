@@ -36,8 +36,11 @@ this Mac, but it was a long time ago and I don't remember the
 details...
 
 1) Install Fink in /sw from finkproject.net
+
 2) "fink install libopus0-dev libopus0-shlibs"
+
 3) cd wireshark-opus
+
 4) mvn
 
 How to capture PDML
