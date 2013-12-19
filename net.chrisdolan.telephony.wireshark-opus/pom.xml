@@ -1,0 +1,94 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <groupId>net.chrisdolan.telephony</groupId>
+        <artifactId>net.chrisdolan.telephony.parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>net.chrisdolan.telephony.wireshark-opus</artifactId>
+    <name>${project.artifactId}</name>
+
+    <properties>
+        <telephony.version>${project.version}</telephony.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.chrisdolan.telephony</groupId>
+            <artifactId>net.chrisdolan.telephony.libopus</artifactId>
+            <version>[${telephony.version}]</version>
+        </dependency>
+        <dependency>
+            <groupId>net.chrisdolan.telephony</groupId>
+            <artifactId>net.chrisdolan.telephony.libopus</artifactId>
+            <version>[${telephony.version}]</version>
+            <classifier>java-client-mac-x64</classifier>
+            <type>jnilib</type>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>[${junit.version}]</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.0.2</version>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                    <fork>true</fork>
+                    <maxmem>512m</maxmem>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-jni</id>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <!--phase>process-sources</phase -->
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>net.chrisdolan.telephony</groupId>
+                                    <artifactId>net.chrisdolan.telephony.libopus</artifactId>
+                                    <version>${telephony.version}</version> <!-- for some weird reason, ${project.version} wouldn't work due to added 
+                                        brackets -->
+                                    <classifier>java-client-mac-x64</classifier>
+                                    <type>jnilib</type>
+                                    <destFileName>libopus.jnilib</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>net.chrisdolan.telephony.wireshark.opus.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
